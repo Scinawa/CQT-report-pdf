@@ -1,0 +1,38 @@
+[project]
+name = "cqt-benchmarking-report-generator"
+version = "0.1.0"
+description = "A project to generate PDF reports from benchmarking experiments on quantum computers."
+authors = [
+    {name = "CQT", email = "your.email@example.com"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.12"
+dependencies = [
+    "pylatex>=1.4.0",
+    "jsonschema>=4.0.0",
+    "numpy>=1.20.0",
+    "jinja2>=3.0.0",
+    "numpy",
+    "matplotlib",
+    "networkx",
+    "aiohttp",
+    "jwt",
+    "pyjwt",
+    "requests",
+    "dynaconf",
+    "sympy",
+    "qibo",
+    "qibo_client",
+    "qibocal",
+    "GitPython",
+    "torch",
+    "torchvision",
+    "qiboml",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

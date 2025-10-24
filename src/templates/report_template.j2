@@ -1,0 +1,758 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --------------------------------------------------------
+% Quantum Benchmark Report
+% Using Tau LaTeX Class
+% --------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[9pt,a4paper]{src/templates/tau-class/tau}
+\usepackage[english]{babel}
+
+% Additional packages that might be needed and are not in tau.cls
+\usepackage{longtable}
+\usepackage{multicol}
+\usepackage{needspace}
+
+%----------------------------------------------------------
+% TITLE
+%----------------------------------------------------------
+
+\journalname{Benchmark Report}
+\title{Benchmarking of NQCH's {{ platform }}}
+
+%----------------------------------------------------------
+% AUTHORS AND INFORMATION
+%----------------------------------------------------------
+
+\makeatletter
+\xdef\authordate{\today}   % expand \today now; define globally
+\makeatother
+
+\author{\authordate}       % will print the actual date where author goes
+
+
+
+%----------------------------------------------------------
+% LOGO CONFIGURATION
+%----------------------------------------------------------
+
+\logopath{src/templates/cqt.pdf}
+\logoheight{1.5cm}
+
+%----------------------------------------------------------
+% FOOTER INFORMATION
+%----------------------------------------------------------
+
+\institution{Centre for Quantum Technologies}
+\footinfo{Benchmark Report}
+\theday{ {{ date }} } 
+\leadauthor{Quantum hardware lab of CQT}
+\course{Quantum Hardware Team}
+
+%----------------------------------------------------------
+% ABSTRACT
+%----------------------------------------------------------
+
+%\begin{abstract}
+%This report presents the quantum benchmark results for {{ chip_name }} with {{ qubits }} qubits. 
+%The benchmark was conducted on {{ date }} at {{ time }}. The report includes comparison between 
+%the new version and control version, routine results, and T1/T2 measurements.
+%\end{abstract}
+
+\keywords{quantum computing, benchmarking, quantum hardware, performance analysis}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{firststyle}
+
+% Report of changes
+\section{Report of Changes}
+
+
+\begin{multicols}{2}
+
+\begin{center}
+\begin{tauenvmine}
+{\textbf{Platform:}  {{ left.device | default('Unknown') | replace('_', '\\_') }} } \\
+\textbf{Calibration-id:} \emph{ {{ left.calibration_id | default('N/A') | replace('_', '\\_') }} } \\
+\textbf{Calibration date:} \emph{ {{ left.calibration_date | default('Unknown') | replace('_', '\\_') }} } \\
+\textbf{Calibration note:} {{ left.calibration_note | default('N/A') }} \\
+\: \\
+\textbf{Experiment-id:} \emph{ {{ left.run_id | default('N/A') | replace('_', '\\_') }} } \\
+\textbf{Experiment date:} \emph{ {{ left.run_date | default('Unknown') | replace('_', '\\_') }} } \\
+\textbf{Experiment note:} \emph{ {{ left.run_note | default('Unknown') | replace('_', '\\_') }} } \\
+
+
+\end{tauenvmine}
+\end{center}
+
+\columnbreak
+
+\begin{center}
+\begin{tauenvmine}
+{\textbf{Platform:}  {{ right.device | default('Unknown') | replace('_', '\\_') }} } \\
+\textbf{Calibration-id:} \emph{ {{ right.calibration_id | default('N/A') | replace('_', '\\_') }} } \\
+\textbf{Calibration date:} \emph{ {{ right.calibration_date | default('Unknown') | replace('_', '\\_') }} } \\
+\textbf{Calibration note:} {{ right.calibration_note | default('N/A') }} \\
+\: \\
+\textbf{Experiment-id:} \emph{ {{ right.run_id | default('N/A') | replace('_', '\\_') }} } \\
+\textbf{Experiment date:} \emph{ {{ right.run_date | default('Unknown') | replace('_', '\\_') }} } \\
+\textbf{Experiment note:} \emph{ {{ right.run_note | default('Unknown') | replace('_', '\\_') }} } \\
+\end{tauenvmine}
+\end{center}
+
+\end{multicols}
+
+
+%----------------------------------------------------------
+\section{Version Comparison}
+\begin{multicols}{2}
+
+%\subsection{New Version}
+\begin{tauenv}
+\begin{center}
+\begin{tabular}{@{}ll|ll@{}}
+\toprule
+\textbf{Library} & \textbf{Version} & \textbf{Library} & \textbf{Version} \\ \midrule
+{% set items = left.versions.items()|list %}
+{% for i in range(0, items|length, 2) %}
+    {{ items[i][0] | replace('_', '\\_') }} & {{ items[i][1] | replace('_', '\\_') }} 
+    {% if i + 1 < items|length %}
+        & {{ items[i+1][0] | replace('_', '\\_') }} & {{ items[i+1][1] | replace('_', '\\_') }} \\
+    {% else %}
+        & & \\
+    {% endif %}
+{% endfor %}
+\bottomrule
+\end{tabular}
+\end{center}
+\hspace{1cm}
+\begin{minipage}{0.45\linewidth}
+
+\end{minipage}
+\end{tauenv}
+
+\columnbreak
+
+%\subsection{Control Version}
+\begin{tauenv}
+\begin{center}
+\begin{tabular}{@{}ll|ll@{}}
+\toprule
+\textbf{Library} & \textbf{Version} & \textbf{Library} & \textbf{Version} \\ \midrule
+{% set items = right.versions.items()|list %}
+{% for i in range(0, items|length, 2) %}
+    {{ items[i][0] | replace('_', '\\_') }} & {{ items[i][1] | replace('_', '\\_') }} 
+    {% if i + 1 < items|length %}
+        & {{ items[i+1][0] | replace('_', '\\_') }} & {{ items[i+1][1] | replace('_', '\\_') }} \\
+    {% else %}
+        & & \\
+    {% endif %}
+{% endfor %}
+\bottomrule
+\end{tabular}
+\end{center}
+\hspace{1cm}
+\begin{minipage}{0.45\linewidth}
+\end{minipage}
+\end{tauenv}
+
+
+\end{multicols}
+
+
+\section{One and two qubit fidelities}
+\begin{multicols}{2}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ left.plot_fidelity }} }
+\end{minipage}
+\end{center}
+
+\columnbreak
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ right.plot_fidelity }} }
+\end{minipage}
+\end{center}
+\end{multicols}
+
+
+
+\section{Statistics} 
+
+% Ensure proper table alignment
+\renewcommand{\arraystretch}{1.2}
+
+% Use table side by side with proper alignment
+\noindent\begin{minipage}{0.49\textwidth}
+{\small
+\begin{center}
+\begin{tabular}{@{}p{1.8cm}p{1.3cm}p{1.2cm}p{1.2cm}p{1.2cm}@{}}
+\toprule
+ & Average & Median & Min & Max \\
+\midrule
+T1 (ns) & {{ left.stat_t1.average }} & {{ left.stat_t1.median }} & {{ left.stat_t1.min }} & {{ left.stat_t1.max }} \\
+T2 (ns) & {{ left.stat_t2.average }} & {{ left.stat_t2.median }} & {{ left.stat_t2.min }} & {{ left.stat_t2.max }} \\
+Fidelity & {{ left.stat_fidelity.average }} & {{ left.stat_fidelity.median }} & {{ left.stat_fidelity.min }} & {{ left.stat_fidelity.max }} \\
+RO fidelity  & {{ left.stat_readout_fidelity.average }} & {{ left.stat_readout_fidelity.median }} & {{ left.stat_readout_fidelity.min }} & {{ left.stat_readout_fidelity.max }} \\
+Mermin Max  & {{ left.mermin_maximum | default('N/A') }} & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+\end{minipage}
+\hfill
+\noindent\begin{minipage}{0.49\textwidth}
+{\small
+\begin{center}
+\begin{tabular}{@{}p{1.8cm}p{1.3cm}p{1.2cm}p{1.2cm}p{1.2cm}@{}}
+\toprule
+ & Average & Median & Min & Max \\
+\midrule
+T1 (ns) & {{ right.stat_t1.average }} & {{ right.stat_t1.median }} & {{ right.stat_t1.min }} & {{ right.stat_t1.max }} \\
+T2 (ns) & {{ right.stat_t2.average }} & {{ right.stat_t2.median }} & {{ right.stat_t2.min }} & {{ right.stat_t2.max }} \\
+Fidelity  & {{ right.stat_fidelity.average }} & {{ right.stat_fidelity.median }} & {{ right.stat_fidelity.min }} & {{ right.stat_fidelity.max }} \\
+RO Fidelity  & {{ right.stat_readout_fidelity.average }} & {{ right.stat_readout_fidelity.median }} & {{ right.stat_readout_fidelity.min }} & {{ right.stat_readout_fidelity.max }} \\
+Mermin Max  & {{ right.mermin_maximum | default('N/A') }} & & & \\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+\end{minipage}
+
+% Reset arraystretch to default
+\renewcommand{\arraystretch}{1.0}
+
+\section{Best Qubits Selection}
+
+\begin{multicols}{2}
+
+\begin{center}
+\begin{tabular}{@{}c c c@{}}
+\toprule
+k-qubits & Best Qubits & Fidelity \\ \midrule
+2 & {{ left.best_qubits["2"].qubits }} & {{ left.best_qubits["2"].fidelity }} \\
+3 & {{ left.best_qubits["3"].qubits }} & {{ left.best_qubits["3"].fidelity }} \\
+4 & {{ left.best_qubits["4"].qubits }} & {{ left.best_qubits["4"].fidelity }} \\
+5 & {{ left.best_qubits["5"].qubits }} & {{ left.best_qubits["5"].fidelity }} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\columnbreak
+
+\begin{center}
+\begin{tabular}{@{}c c c@{}}
+\toprule
+k-qubits & Best Qubits & Fidelity \\ \midrule
+2 & {{ right.best_qubits["2"].qubits }} & {{ right.best_qubits["2"].fidelity }} \\
+3 & {{ right.best_qubits["3"].qubits }} & {{ right.best_qubits["3"].fidelity }} \\
+4 & {{ right.best_qubits["4"].qubits }} & {{ right.best_qubits["4"].fidelity }} \\
+5 & {{ right.best_qubits["5"].qubits }} & {{ right.best_qubits["5"].fidelity }} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{multicols}
+
+
+
+\section{Benchmark Results}
+
+\begin{multicols}{2}
+
+%\subsection{New Fidelities}
+\begin{center}
+\begin{tabular}{@{}c c c@{}}
+\toprule
+Qubit n & Fidelity & Error Bars \\ \midrule
+{% for row in left.fidelities_list %}
+{{ row.qn }} & {{ row.fidelity }} & $\pm$ {{ row.error_bars }} \\
+{% endfor %}
+\bottomrule
+\end{tabular}
+\end{center}
+
+\columnbreak
+
+%\subsection{Control Fidelities}
+\begin{center}
+\begin{tabular}{@{}c c c@{}}
+\toprule
+Qubit n & Fidelity & Error Bars \\ \midrule
+{% for row in right.fidelities_list %}
+{{ row.qn }} & {{ row.fidelity }} & $\pm$ {{ row.error_bars }} \\
+{% endfor %}
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{multicols}
+
+
+
+
+{% if mermin_plot_is_set %}
+\section{Mermin}
+{{ mermin_description }}
+
+\begin{multicols}{2}
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.mermin_runtime }}
+\item \textbf{Qubits used:} {{ left.mermin_qubits }}
+
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ left.plot_mermin }} }
+\end{minipage}
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.mermin_runtime }}
+\item \textbf{Qubits used:} {{ right.mermin_qubits }}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ right.plot_mermin }} }
+\end{minipage}
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Grover 2Q state preparation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if grover2q_plot_is_set %}
+\section{Grover - 2 qubits}
+{{ grover2q_description }}
+
+\begin{multicols}{2}
+\raggedcolumns  % avoid balancing at the end
+
+% --- LEFT BLOCK ---
+\Needspace{0.48\textheight} 
+\begin{samepage}            
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.grover2q_runtime }}
+\item \textbf{Qubits used:} {{ left.grover2q_qubits }}
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_grover2q }} }
+\end{center}
+\end{samepage}
+
+\columnbreak
+
+% --- RIGHT BLOCK ---
+\Needspace{0.48\textheight}
+\begin{samepage}
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.grover2q_runtime }}
+\item \textbf{Qubits used:} {{ right.grover2q_qubits }}
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_grover2q }} }
+\end{center}
+\end{samepage}
+
+\end{multicols}
+{% endif %}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Grover 3Q state preparation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{% if grover3q_plot_is_set %}
+\section{Grover - 3 qubits}
+{{ grover3q_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.grover3q_runtime }}
+\item \textbf{Qubits used:} {{ left.grover3q_qubits }}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ left.plot_grover3q }} }
+\end{minipage}
+\end{center}
+
+\columnbreak
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.grover3q_runtime }}
+\item \textbf{Qubits used:} {{ right.grover3q_qubits }}
+\end{itemize}
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ right.plot_grover3q }} }
+\end{minipage}
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% GHZ state preparation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if ghz_plot_is_set %}
+\newpage
+\section{GHZ state preparation}
+{{ ghz_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.ghz_runtime }}
+\item \textbf{Qubits used:} {{ left.ghz_qubits }}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_ghz }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.ghz_runtime }}
+\item \textbf{Qubits used:} {{ right.ghz_qubits }}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_ghz }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tomography state preparation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if tomography_plot_is_set %}
+\section{Tomography state preparation}
+{{ tomography_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ tomography_duration_left }}
+\item \textbf{Qubits used:} {{ tomography_qubits_left }}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ plot_tomography }} }
+\end{minipage}
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ tomography_duration_right }}
+\item \textbf{Qubits used:} {{ tomography_qubits_right}}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ plot_tomography_right }} }
+\end{minipage}
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Process tomography state preparation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+{% if process_tomography_plot_is_set %}
+\section{Process Tomography state preparation}
+{{ process_tomography_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.process_tomography_runtime }}
+\item \textbf{Qubits used:} {{ left.process_tomography_qubits }}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_process_tomography }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.process_tomography_runtime }}
+\item \textbf{Qubits used:} {{ right.process_tomography_qubits }}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_process_tomography }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Reuploading classifier 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if reuploading_classifier_plot_is_set %}
+\section{Reuploading Classifier}
+{{ reuploading_classifier_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.reuploading_classifier_runtime }}
+\item \textbf{Qubits used:} {{ left.reuploading_classifier_qubits }}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ left.plot_reuploading_classifier }} }
+\end{minipage}
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.reuploading_classifier_runtime }}
+\item \textbf{Qubits used:} {{ right.reuploading_classifier_qubits }}
+\end{itemize}
+
+\begin{center}
+\begin{minipage}{0.95\linewidth}
+\centering
+\includegraphics[width=\linewidth]{ {{ right.plot_reuploading_classifier }} }
+\end{minipage}
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% QFT PLOT  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if qft_plot_is_set %}
+\section{QFT Plots}
+{{ qft_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.qft_runtime }}
+\item \textbf{Qubits used:} {{ left.qft_qubits }}
+
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_qft }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.qft_runtime }}
+\item \textbf{Qubits used:} {{ right.qft_qubits }}
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_qft }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Yeast classifier 3q
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if yeast_classification_3q_plot_is_set %}
+\section{QML: Yeast dataset (3 qubits)}
+{{ yeast_3q_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Duration:} {{ left.yeast_3q_duration }}
+\item \textbf{Accuracy:} {{ left.yeast_3q_accuracy }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_yeast_3q }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Duration:} {{ right.yeast_3q_duration }}
+\item \textbf{Accuracy:} {{ right.yeast_3q_accuracy }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_yeast_3q }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Statlog classifier 3q
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if statlog_classification_3q_plot_is_set %}
+\section{QML: Statlog-Satellite dataset (3 qubits)}
+{{ statlog_3q_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Duration:} {{ left.statlog_3q_duration }}
+\item \textbf{Accuracy:} {{ left.statlog_3q_accuracy }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_statlog_3q }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Duration:} {{ right.statlog_3q_duration }}
+\item \textbf{Accuracy:} {{ right.statlog_3q_accuracy }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_statlog_3q }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Yeast classifier 4q
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if yeast_classification_4q_plot_is_set %}
+\section{QML: Yeast dataset (4 qubits)}
+{{ qml_4Q_yeast_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.qml_4Q_yeast_runtime }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_yeast_4q }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.qml_4Q_yeast_runtime }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_yeast_4q }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Statlog classifier 4q
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if statlog_classification_4q_plot_is_set %}
+\section{QML: Statlog-Satellite dataset (4 qubits)}
+{{ statlog_4q_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Duration:} {{ left.statlog_4q_duration }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_statlog_4q }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Duration:} {{ right.statlog_4q_duration }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_statlog_4q }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Amplitude Encoding
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{% if amplitude_encoding_plot_is_set %}
+\section{Amplitude Encoding}
+{{ amplitude_encoding_description }}
+
+\begin{multicols}{2}
+\begin{itemize}
+\item \textbf{Runtime:} {{ left.amplitude_encoding_runtime }}
+\item \textbf{Qubits used:} {{ left.amplitude_encoding_qubits }}
+
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ left.plot_amplitude_encoding }} }
+\end{center}
+
+\columnbreak
+
+\begin{itemize}
+\item \textbf{Runtime:} {{ right.amplitude_encoding_runtime }}
+\item \textbf{Qubits used:} {{ right.amplitude_encoding_qubits }}
+\end{itemize}
+
+\begin{center}
+\centering
+\includegraphics[width=0.95\linewidth]{ {{ right.plot_amplitude_encoding }} }
+\end{center}
+\end{multicols}
+{% endif %}
+
+
+\end{document}

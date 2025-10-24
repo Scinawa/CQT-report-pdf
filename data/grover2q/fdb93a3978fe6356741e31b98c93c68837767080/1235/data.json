@@ -1,0 +1,11 @@
+{
+    "qubit_pairs": [
+        [
+            13,
+            14
+        ]
+    ],
+    "nshots": 1000,
+    "device": "sinq20",
+    "target": "11"
+}
